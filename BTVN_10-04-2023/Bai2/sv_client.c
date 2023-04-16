@@ -6,7 +6,7 @@
 #include<sys/socket.h>
 #include<netinet/in.h>
 #include<netdb.h>
-
+#include <time.h>
 void error(const char *msg){
 	perror(msg);
 	exit(1);
@@ -54,7 +54,7 @@ int main(int argc,char *argv[]){
 	}
 
 	printf("Server - %s\n",MSSV);
-	scanf("%s",MSSV);
+	scanf ("%[^\n]%*c", MSSV);
 	write(sockfd,MSSV,255);
 
 	//hoten
@@ -65,7 +65,7 @@ int main(int argc,char *argv[]){
 	}
 
 	printf("Server - %s\n",hoten);
-	scanf("%s",hoten);
+	scanf ("%[^\n]%*c", hoten);
 	write(sockfd,hoten,255);
 
 	//ngaysinh
@@ -76,7 +76,7 @@ int main(int argc,char *argv[]){
 	}
 
 	printf("Server - %s\n",ngaysinh);
-	scanf("%s",ngaysinh);
+	scanf ("%[^\n]%*c", ngaysinh);
 	write(sockfd,ngaysinh,255);
 
 	//GPA
@@ -87,14 +87,36 @@ int main(int argc,char *argv[]){
 	}
 
 	printf("Server - %s\n",GPA);
-	scanf("%s",GPA);
+	scanf ("%[^\n]%*c", GPA);
 	write(sockfd,GPA,30);
 
 	//IP
-	// char IP[255]
-	// // char IP[255]=argv[1];
-	// write(sockfd,IP,30);
-	printf("Cong %s:",argv[1]);
+
+    char IP[30];
+	n = read(sockfd,IP,30);
+	if(n < 0){
+		error("Error reading From Socket");
+	}
+	// printf("Server - %s\n",IP);
+	// IP[0]=argv[1];
+	write(sockfd,argv[1],30);
+
+	time_t now = time(NULL);
+    struct tm *t = localtime(&now);
+    char time[100];
+    strftime(time, sizeof(time), "%Y-%m-%d %H:%M:%S", t);
+    // printf("%s\n", time);
+
+	// get time now
+	char time_now[100];
+	n = read(sockfd,time_now,30);
+	if(n < 0){
+		error("Error reading From Socket");
+	}
+	// printf("Server - %s\n",IP);
+	// IP[0]=argv[1];
+	write(sockfd,time,30);
+
 	close(sockfd);
 	return 0;
 

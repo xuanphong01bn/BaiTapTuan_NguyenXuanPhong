@@ -87,13 +87,25 @@ int main(int argc,char *argv[]){
 	read(newsockfd,GPA,255);
 
 	char IP[255];
+	n = write(newsockfd,"          ",strlen("Enter IP : "));
+	if(n < 0){
+		error("Error Writing to socket");
+	}
 	read(newsockfd,IP,255);
 
-	printf("Thong tin sinh vien : %s %s %s %s", MSSV, hoten, ngaysinh, GPA);
+	char time_now[255];
+	n = write(newsockfd,"           ",strlen("Enter IP : "));
+	if(n < 0){
+		error("Error Writing to socket");
+	}
+	read(newsockfd,time_now,255);
+
+	printf("Thong tin sinh vien :\nMSSV: %s\nHo va Ten: %s\nNgay sinh: %s\nGPA: %s\n", MSSV, hoten, ngaysinh, GPA);
+
 	FILE *flog;
 	flog=fopen(argv[2],"w");
 
-	fprintf(flog, "%s %s %s %s %s","172.17.137.216", MSSV, hoten, ngaysinh, GPA);
+	fprintf(flog, "%s %s %s %s %s %s",IP, time_now, MSSV, hoten, ngaysinh, GPA);
 
 	close(newsockfd);
 	close(sockfd);
